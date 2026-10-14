@@ -10,6 +10,10 @@ export default function HomeScreen() {
   const [exp, setExp] = useState(0);
   const [level, setLevel] = useState(1);
   const [gold, setGold] = useState(100);
+  const earnGold = () => {
+    setGold(gold + 10);
+  };
+  const [hp, setHp] = useState(50);
 
   return (
     <View style={styles.container}>
@@ -24,6 +28,7 @@ export default function HomeScreen() {
 
       <Text style={styles.level}>LV. {level}</Text>
       <Text style={styles.exp}>EXP {exp} / 10</Text>
+      <Text style={styles.hp}>HP {hp} / 100</Text>
       <Text style={styles.exp}>GOLD {gold}</Text>
 
       <View style={styles.expBar}>
@@ -33,6 +38,15 @@ export default function HomeScreen() {
             { width: `${Math.min(exp * 10, 100)}%` },
           ]}
         />
+      </View>
+      
+      <View style={styles.hpBar}>
+        <View
+          style={[
+            styles.hpFill,
+            { width: `${hp}%` },
+       ]}
+  />
       </View>
 
       <View style={styles.questCard}>
@@ -47,9 +61,15 @@ export default function HomeScreen() {
         </Pressable>
            <Pressable
           style={styles.button}
-          onPress={() => setGold(gold + 10)}
+          onPress={earnGold}
                     >
           <Text style={styles.buttonText}>골드 +10 </Text>
+        </Pressable>
+        <Pressable
+          style={styles.button}
+          onPress={() => setHp(Math.min(hp + 10, 100))}
+                    >
+          <Text style={styles.buttonText}>HP +10  </Text>
         </Pressable>
       </View>
 
@@ -112,6 +132,11 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 
+  hp: {
+    color:'#ef4444',
+    fontSize: 18,
+    marginTop: 10,
+  },  
   expBar: {
     width: '80%',
     height: 12,
@@ -149,9 +174,10 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#2563EB',
+    backgroundColor: '#16A34A',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 10,   
+    marginBottom: 10, 
     alignItems: 'center',
   },
 
@@ -164,4 +190,19 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     marginTop: 25,
   },
+  hpBar: {
+    width: '80%',
+    height: 12,
+    backgroundColor: '#374151',
+    borderRadius: 6,
+    overflow: 'hidden',
+    marginTop: 10,
+  },
+
+  hpFill: {
+    height: '100%',
+    backgroundColor: '#EF4444',
+  },
+
+  
 });
