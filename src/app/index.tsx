@@ -14,7 +14,7 @@ export default function HomeScreen() {
     setGold(gold + 10);
   };
   const [hp, setHp] = useState(50);
-
+  const [questDone, setQuestDone] = useState(false);
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>⚔️</Text>
@@ -52,12 +52,26 @@ export default function HomeScreen() {
       <View style={styles.questCard}>
         <Text style={styles.questTitle}>오늘의 퀘스트</Text>
         <Text style={styles.quest}>🚶 30분 걷기</Text>
+        <Text style={styles.quest}>
+           {questDone ? '퀘스트 완료!' : '아직 완료하지 않음'}
+        </Text>
 
         <Pressable
-          style={styles.button}
-          onPress={() => setExp(exp + 1)}
-        >
-          <Text style={styles.buttonText}>퀘스트 완료 +1 EXP </Text>
+          style={[
+            styles.button,
+            questDone ? { backgroundColor: '#4B5563' } : {}
+          ]}
+          onPress={() => {
+            if (!questDone) {
+            setExp(exp + 1);
+            setQuestDone(true);
+           }
+          }}
+          disabled={questDone}
+        > 
+         <Text style={styles.buttonText}>
+           {questDone ? '✓ 완료한 퀘스트' : '퀘스트 완료 +1 EXP'}
+         </Text>
         </Pressable>
            <Pressable
           style={styles.button}
