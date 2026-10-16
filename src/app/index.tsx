@@ -15,6 +15,7 @@ export default function HomeScreen() {
   };
   const [hp, setHp] = useState(50);
   const [questDone, setQuestDone] = useState(false);
+  const [readDone, setReadDone] = useState(false);
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>⚔️</Text>
@@ -51,11 +52,11 @@ export default function HomeScreen() {
 
       <View style={styles.questCard}>
         <Text style={styles.questTitle}>오늘의 퀘스트</Text>
+            <View>  
         <Text style={styles.quest}>🚶 30분 걷기</Text>
         <Text style={styles.quest}>
            {questDone ? '퀘스트 완료!' : '아직 완료하지 않음'}
         </Text>
-
         <Pressable
           style={[
             styles.button,
@@ -72,7 +73,33 @@ export default function HomeScreen() {
          <Text style={styles.buttonText}>
            {questDone ? '✓ 완료한 퀘스트' : '퀘스트 완료 +1 EXP'}
          </Text>
+         </Pressable>        
+      </View>
+
+      <View>
+         <Text style={styles.quest}>📖 책 10분 읽기</Text>
+         <Text style={styles.quest}>
+           {readDone ? '퀘스트 완료!' : '아직 완료하지 않음'}
+        </Text>
+
+         <Pressable
+          style={[
+            styles.button,
+            readDone ? { backgroundColor: '#4B5563' } : {}
+          ]}
+          onPress={() => {
+            if (!readDone) {
+            setExp(exp + 1);
+            setReadDone(true);
+           }
+          }}
+          disabled={readDone}
+        > 
+         <Text style={styles.buttonText}>
+           {readDone ? '✓ 완료한 퀘스트' : '퀘스트 완료 +1 EXP'}
+         </Text>
         </Pressable>
+              </View>
            <Pressable
           style={styles.button}
           onPress={earnGold}
@@ -86,6 +113,7 @@ export default function HomeScreen() {
           <Text style={styles.buttonText}>HP +10  </Text>
         </Pressable>
       </View>
+     
 
       <Text style={styles.message}>
         오늘의 나를 경험치로 바꾸자!
