@@ -57,6 +57,10 @@ export default function HomeScreen() {
         <Text style={styles.quest}>
            {questDone ? '퀘스트 완료!' : '아직 완료하지 않음'}
         </Text>
+        <Text style={styles.quest}>
+           {!questDone ? '🎁 완료 보상: EXP +1' : '🎉 경험치 1 획득 완료!'}
+        </Text>
+
         <Pressable
           style={[
             styles.button,
@@ -121,6 +125,8 @@ export default function HomeScreen() {
     </View>
   );
 }
+
+// 스타일 설정
 
 const styles = StyleSheet.create({
   container: {
