@@ -1,3 +1,4 @@
+// 1. import ========================================================================
 import { useState } from 'react';
 import {
   Pressable,
@@ -6,7 +7,10 @@ import {
   View,
 } from 'react-native';
 
+// 2. 컴포넌트 함수 ============================================================
 export default function HomeScreen() {
+
+// 3. 상태 변수 ============================================================
   const [exp, setExp] = useState(0);
   const [level, setLevel] = useState(1);
   const [gold, setGold] = useState(100);
@@ -16,6 +20,9 @@ export default function HomeScreen() {
   const [hp, setHp] = useState(50);
   const [questDone, setQuestDone] = useState(false);
   const [readDone, setReadDone] = useState(false);
+  const [meditationDone, setMeditationDone] = useState(false);
+
+// 4. 화면 구성 ============================================================
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>⚔️</Text>
@@ -57,11 +64,19 @@ export default function HomeScreen() {
         <Text style={styles.quest}>
            {questDone ? '퀘스트 완료!' : '아직 완료하지 않음'}
         </Text>
-        <Text style={styles.quest}>
-           {!questDone ? '🎁 완료 보상: EXP +1' : '🎉 경험치 1 획득 완료!'}
-        </Text>
-
-        <Pressable
+       <Text
+  style={[
+    styles.quest,
+    questDone
+      ? { color: '#FBBF24' }
+      : { color: '#9CA3AF' }
+  ]}
+>
+  {!questDone
+    ? '🎁 완료 보상: EXP +1'
+    : '🎉 경험치 1 획득 완료!'}
+</Text>
+              <Pressable
           style={[
             styles.button,
             questDone ? { backgroundColor: '#4B5563' } : {}
@@ -85,7 +100,18 @@ export default function HomeScreen() {
          <Text style={styles.quest}>
            {readDone ? '퀘스트 완료!' : '아직 완료하지 않음'}
         </Text>
-
+ <Text
+  style={[
+    styles.quest,
+    readDone
+      ? { color: '#60A5FA' }
+      : { color: '#9CA3AF' }
+  ]}
+>
+  {!readDone
+    ? '📚 독서하면 EXP +1'
+    : '🌟 지식이 쌓였습니다!'}
+</Text>
          <Pressable
           style={[
             styles.button,
@@ -101,6 +127,42 @@ export default function HomeScreen() {
         > 
          <Text style={styles.buttonText}>
            {readDone ? '✓ 완료한 퀘스트' : '퀘스트 완료 +1 EXP'}
+         </Text>
+        </Pressable>
+        </View>
+
+      <View>
+         <Text style={styles.quest}>🧘 명상 5분</Text>
+         <Text style={styles.quest}>
+           {meditationDone ? '퀘스트 완료!' : '아직 완료하지 않음'}
+        </Text>
+ <Text
+  style={[
+    styles.quest,
+    meditationDone
+      ? { color: '#60A5FA' }
+      : { color: '#9CA3AF' }
+  ]}
+>
+  {!meditationDone
+    ? '🧘 명상하면 EXP +1'
+    : '🌟 마음이 편안해졌습니다!'}
+</Text>
+         <Pressable
+          style={[
+            styles.button,
+            meditationDone ? { backgroundColor: '#4B5563' } : {}
+          ]}
+          onPress={() => {
+            if (!meditationDone) {
+            setExp(exp + 1);
+            setMeditationDone(true);
+           }
+          }}
+          disabled={meditationDone}
+        > 
+         <Text style={styles.buttonText}>
+           {meditationDone ? '✓ 완료한 퀘스트' : '퀘스트 완료 +1 EXP'}
          </Text>
         </Pressable>
               </View>
@@ -126,7 +188,7 @@ export default function HomeScreen() {
   );
 }
 
-// 스타일 설정
+// 6. 스타일 설정 ============================================================
 
 const styles = StyleSheet.create({
   container: {
