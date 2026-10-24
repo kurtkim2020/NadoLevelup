@@ -2,9 +2,10 @@
 import { useState } from 'react';
 import {
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
-  View,
+  View
 } from 'react-native';
 
 // 2. 컴포넌트 함수 ============================================================
@@ -24,7 +25,10 @@ export default function HomeScreen() {
 
 // 4. 화면 구성 ============================================================
   return (
-    <View style={styles.container}>
+    <ScrollView
+  style={styles.container}
+  contentContainerStyle={styles.contentContainer}
+>
       <Text style={styles.logo}>⚔️</Text>
 
       <Text style={styles.title}>나도 레벨업</Text>
@@ -184,20 +188,24 @@ export default function HomeScreen() {
       <Text style={styles.message}>
         오늘의 나를 경험치로 바꾸자!
       </Text>
-    </View>
+    </ScrollView>
   );
 }
 
 // 6. 스타일 설정 ============================================================
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#111827',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
+ container: {
+  flex: 1,
+  backgroundColor: '#111827',
+},
+
+contentContainer: {
+  flexGrow: 1,
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  padding: 24,
+},
 
   logo: {
     fontSize: 34,
