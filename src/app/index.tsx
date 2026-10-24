@@ -77,7 +77,7 @@ export default function HomeScreen() {
   ]}
 >
   {!questDone
-    ? '🎁 완료 보상: EXP +1'
+    ? '🎁 걷기하면 EXP +1'
     : '🎉 경험치 1 획득 완료!'}
 </Text>
               <Pressable
@@ -113,7 +113,7 @@ export default function HomeScreen() {
   ]}
 >
   {!readDone
-    ? '📚 독서하면 EXP +1'
+    ? '🎁 독서하면 EXP +1'
     : '🌟 지식이 쌓였습니다!'}
 </Text>
          <Pressable
@@ -149,7 +149,7 @@ export default function HomeScreen() {
   ]}
 >
   {!meditationDone
-    ? '🧘 명상하면 EXP +1'
+    ? '🎁 명상하면 EXP +1'
     : '🌟 마음이 편안해졌습니다!'}
 </Text>
          <Pressable

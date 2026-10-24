@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
 
 
 export default function PracticeScreen() {
     const [gold, setGold] = useState(0);
+    const [questName, setQuestName] = useState('');
   return (
     <View style={{ padding: 50
       
@@ -13,11 +14,18 @@ export default function PracticeScreen() {
       <Pressable onPress={() => setGold(gold + 1)}> 
         <Text>Gold +1</Text>
       </Pressable>
+      <TextInput 
+      placeholder="새로운 퀘스트를 입력하세요"
+      value={questName}
+      onChangeText={setQuestName}
+      maxLength={10}
+      />
+      <Text>입력한 퀘스트 : {questName}</Text>
     </View>
-  );
+     );
 }
 
-// 여기부터 혼자 연습내용
+
 
 
 
