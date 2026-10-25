@@ -5,6 +5,7 @@ import { Pressable, Text, TextInput, View } from 'react-native';
 export default function PracticeScreen() {
     const [gold, setGold] = useState(0);
     const [questName, setQuestName] = useState('');
+    const [registeredQuest, setRegisteredQuest] = useState('');
   return (
     <View style={{ padding: 50
       
@@ -20,6 +21,13 @@ export default function PracticeScreen() {
       onChangeText={setQuestName}
       maxLength={10}
       />
+      <Pressable onPress={() => 
+        {setRegisteredQuest(questName);
+         setQuestName('');
+        }}  >
+      <Text>퀘스트 등록</Text>
+      </Pressable>
+      <Text>등록된 퀘스트 {registeredQuest}</Text>
       <Text>입력한 퀘스트 : {questName}</Text>
     </View>
      );
