@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View
 } from 'react-native';
 
@@ -22,6 +23,7 @@ export default function HomeScreen() {
   const [questDone, setQuestDone] = useState(false);
   const [readDone, setReadDone] = useState(false);
   const [meditationDone, setMeditationDone] = useState(false);
+  const [questName, setQuestName] = useState('');
 
 // 4. 화면 구성 ============================================================
   return (
@@ -33,7 +35,16 @@ export default function HomeScreen() {
 
       <Text style={styles.title}>나도 레벨업</Text>
       <Text style={styles.subtitle}>현실 성장 RPG</Text>
-
+      <TextInput
+        placeholder="새로운 퀘스트를 입력하세요"
+        value={questName}
+        onChangeText={setQuestName}
+        placeholderTextColor="#AAAAAA"
+        style={{ color: 'white', borderWidth: 1, borderColor: 'white', padding: 10, width: 250}}
+      />
+      <Text style={{ color: 'white' }}>
+         입력한 퀘스트 : {questName}
+      </Text>
       <View style={styles.character}>
         <Text style={styles.characterEmoji}>🧙‍♂️</Text>
       </View>
