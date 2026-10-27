@@ -24,6 +24,8 @@ export default function HomeScreen() {
   const [readDone, setReadDone] = useState(false);
   const [meditationDone, setMeditationDone] = useState(false);
   const [questName, setQuestName] = useState('');
+  const [registeredQuest, setRegisteredQuest] = useState('');
+  const [quests, setQuests] = useState<string[]>([]);
 
 // 4. 화면 구성 ============================================================
   return (
@@ -45,6 +47,24 @@ export default function HomeScreen() {
       <Text style={{ color: 'white' }}>
          입력한 퀘스트 : {questName}
       </Text>
+      <Pressable onPress={() => {
+        setRegisteredQuest(questName);
+        setQuests([...quests, questName]);
+        setQuestName('');
+        }}>
+         <Text style={{ color: 'white' }}>퀘스트 등록</Text>
+      </Pressable>
+      <Text style={{ color: 'white' }}>
+        등록된 퀘스트 : {registeredQuest}
+      </Text>
+      <Text style={{ color: 'white' }}>
+        등록된 퀘스트 개수 : {quests.length}개
+      </Text>
+      {quests.map((quest, index) => (
+      <Text key={index} style={{ color: 'white' }}>
+      {index + 1}. {quest}
+      </Text>
+      ))}
       <View style={styles.character}>
         <Text style={styles.characterEmoji}>🧙‍♂️</Text>
       </View>
