@@ -25,7 +25,13 @@ export default function HomeScreen() {
   const [meditationDone, setMeditationDone] = useState(false);
   const [questName, setQuestName] = useState('');
   const [registeredQuest, setRegisteredQuest] = useState('');
-  const [quests, setQuests] = useState<string[]>([]);
+  type Quest = {
+    name: string;
+    completed: boolean;
+  };
+
+const [quests, setQuests] = useState<Quest[]>([]);
+  
 
 // 4. 화면 구성 ============================================================
   return (
@@ -49,7 +55,13 @@ export default function HomeScreen() {
       </Text>
       <Pressable onPress={() => {
         setRegisteredQuest(questName);
-        setQuests([...quests, questName]);
+        setQuests([
+          ...quests,
+          {
+            name: questName,
+            completed: false,
+          },
+        ]);
         setQuestName('');
         }}>
          <Text style={{ color: 'white' }}>퀘스트 등록</Text>
@@ -60,11 +72,43 @@ export default function HomeScreen() {
       <Text style={{ color: 'white' }}>
         등록된 퀘스트 개수 : {quests.length}개
       </Text>
-      {quests.map((quest, index) => (
-      <Text key={index} style={{ color: 'white' }}>
-      {index + 1}. {quest}
+     {quests.map((quest, index) => (
+  <View
+    key={index}
+    style={{ flexDirection: 'row', alignItems: 'center' }}
+  >
+    <Text style={{ color: 'white' }}>
+      {index + 1}. {quest.name}
+    </Text>
+
+    <Pressable
+      onPress={() => {
+        setQuests(
+          quests.map((item, i) =>
+            i === index
+              ? { ...item, completed: true }
+              : item
+          )
+        );
+      }}
+      disabled={quest.completed}
+    >
+      <Text style={{ color: quest.completed ? 'gray' : 'yellow' }}>
+        {quest.completed ? '완료!' : '완료'}
       </Text>
-      ))}
+    </Pressable>
+    <Pressable
+      onPress={() => {
+      setQuests(
+      quests.filter((item, i) => i !== index)
+      );
+      }}
+      style={{ marginLeft: 15 }}
+>
+    <Text style={{ color: 'red' }}>삭제</Text>
+    </Pressable>
+  </View>
+))}
       <View style={styles.character}>
         <Text style={styles.characterEmoji}>🧙‍♂️</Text>
       </View>
