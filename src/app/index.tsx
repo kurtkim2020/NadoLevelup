@@ -83,15 +83,30 @@ const [quests, setQuests] = useState<Quest[]>([]);
 
     <Pressable
       onPress={() => {
+        if (quest.completed) return;
+
         setQuests(
           quests.map((item, i) =>
             i === index
               ? { ...item, completed: true }
               : item
-          )
-        );
+        )
+      );
+
+        setExp((prevExp) => {
+        const nextExp = exp + 1;
+
+        if (nextExp >= 10) {
+          setLevel((prevLevel) => prevLevel + 1);
+          setExp(nextExp - 10);
+        } else {
+          setExp(nextExp);
+        }
+
+        return nextExp;
+      });
       }}
-      disabled={quest.completed}
+        disabled={quest.completed}
     >
       <Text style={{ color: quest.completed ? 'gray' : 'yellow' }}>
         {quest.completed ? '완료!' : '완료'}
