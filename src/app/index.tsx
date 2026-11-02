@@ -128,12 +128,20 @@ const [quests, setQuests] = useState<Quest[]>([]);
         <Text style={styles.characterEmoji}>🧙‍♂️</Text>
       </View>
 
-      <Text style={styles.level}>LV. {level}</Text>
-      <Text style={styles.exp}>EXP {exp} / 10</Text>
+      <View style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: 350,
+        alignSelf: 'center',
+        marginBottom: 8,
+      }}>
+        <Text style={styles.level}>LV. {level}</Text>
+        <Text style={styles.exp}>EXP {exp} / 10</Text>
+      </View>
       <Text style={styles.hp}>HP {hp} / 100</Text>
       <Text style={styles.exp}>GOLD {gold}</Text>
 
-      <View style={styles.expBar}>
+      <View style={[styles.expBar, { width: 350, alignSelf: 'center' }]}>
         <View
           style={[
             styles.expFill,
@@ -141,8 +149,16 @@ const [quests, setQuests] = useState<Quest[]>([]);
           ]}
         />
       </View>
-      
-      <View style={styles.hpBar}>
+      <Text style={{
+        color: '#9CA3AF',
+        fontSize: 12,
+        marginTop: 6,
+        marginBottom: 12,
+      }}>
+        다음 레벨까지 {Math.max(10 - exp, 0)} EXP
+      </Text>
+
+      <View style={[styles.hpBar, { width: 350, alignSelf: 'center' }]}>
         <View
           style={[
             styles.hpFill,
