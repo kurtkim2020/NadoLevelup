@@ -169,30 +169,98 @@ const [quests, setQuests] = useState<Quest[]>([]);
         <Text style={styles.characterEmoji}>🧙‍♂️</Text>
       </View>
 
-      <View style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: 350,
-        alignSelf: 'center',
-        marginBottom: 8,
-      }}>
-        <Text style={styles.level}>LV. {level}</Text>
-        <Text style={styles.exp}>EXP {exp} / 10</Text>
-      </View>
+     <View style={{
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'baseline',
+  gap: 15,
+  marginBottom: 12,
+}}>
+  <Text style={styles.level}>LV. {level}</Text>
+  <Text style={{
+  color: 'white',
+  fontSize: 16,
+  fontWeight: 'bold',
+}}>
+  EXP {exp} / 10
+</Text>
+</View>
       <Text style={styles.hp}>HP {hp} / 100</Text>
-      <Text style={{ color: '#FBBF24', fontWeight: 'bold' }}>
-        STR {str}
+      <View style={{
+  backgroundColor: '#1F2937',
+  padding: 15,
+  borderRadius: 12,
+  marginTop: 15,
+  width: 350,
+  alignSelf: 'center',
+}}>
+  <Text style={{
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 15,
+  }}>
+    캐릭터 능력치
   </Text>
-      <Text style={{ color: '#38BDF8', fontWeight: 'bold' }}>
-  DEX {dex}
-</Text>
-      <Text style={{ color: '#A78BFA', fontWeight: 'bold' }}>
-  INT {int}
-</Text>
-<Text style={{ color: '#34D399', fontWeight: 'bold' }}>
-  MENTAL {mental}
-</Text>
-      <Text style={styles.exp}>GOLD {gold}</Text>
+
+<View style={{
+  flexDirection: 'row',
+  marginBottom: 15,
+}}>
+  <Text style={{
+    color: '#FBBF24',
+    width: '50%',
+    textAlign: 'center',
+  }}>
+    STR {str}
+  </Text>
+
+  <Text style={{
+    color: '#38BDF8',
+    width: '50%',
+    textAlign: 'center',
+  }}>
+    DEX {dex}
+  </Text>
+</View>
+
+<View style={{
+  flexDirection: 'row',
+}}>
+  <Text style={{
+    color: '#A78BFA',
+    width: '50%',
+    textAlign: 'center',
+  }}>
+    INT {int}
+  </Text>
+
+  <Text style={{
+    color: '#34D399',
+    width: '50%',
+    textAlign: 'center',
+  }}>
+    MENTAL {mental}
+  </Text>
+</View>
+<View style={{
+  borderTopWidth: 1,
+  borderTopColor: '#374151',
+  marginTop: 15,
+  paddingTop: 12,
+  alignItems: 'center',
+}}>
+  <Text style={{
+    color: '#FBBF24',
+    fontWeight: 'bold',
+    fontSize: 16,
+  }}>
+    GOLD {gold}
+  </Text>
+</View>
+</View>
+      
 
       <View style={[styles.expBar, { width: 350, alignSelf: 'center' }]}>
         <View
