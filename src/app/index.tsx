@@ -25,10 +25,18 @@ export default function HomeScreen() {
   const [meditationDone, setMeditationDone] = useState(false);
   const [questName, setQuestName] = useState('');
   const [registeredQuest, setRegisteredQuest] = useState('');
-  type Quest = {
-    name: string;
-    completed: boolean;
-  };
+  const [category, setCategory] = useState<Category>('근력');
+  const [str, setStr] = useState(0);
+  const [dex, setDex] = useState(0);
+  const [int, setInt] = useState(0);
+  const [mental, setMental] = useState(0);
+  type Category = '근력' | '유산소' | '공부' | '명상';
+
+type Quest = {
+  name: string;
+  completed: boolean;
+  category: Category;
+};
 
 const [quests, setQuests] = useState<Quest[]>([]);
   
@@ -50,18 +58,40 @@ const [quests, setQuests] = useState<Quest[]>([]);
         placeholderTextColor="#AAAAAA"
         style={{ color: 'white', borderWidth: 1, borderColor: 'white', padding: 10, width: 250}}
       />
+      <View style={{
+  flexDirection: 'row',
+  justifyContent: 'center',
+  flexWrap: 'wrap',
+  gap: 8,
+  marginTop: 10,
+}}>
+  {(['근력', '유산소', '공부', '명상'] as Category[]).map((item) => (
+    <Pressable
+      key={item}
+      onPress={() => setCategory(item)}
+      style={{
+        backgroundColor: category === item ? '#16A34A' : '#374151',
+        padding: 10,
+        borderRadius: 8,
+      }}
+    >
+      <Text style={{ color: 'white' }}>{item}</Text>
+    </Pressable>
+  ))}
+</View>
       <Text style={{ color: 'white' }}>
          입력한 퀘스트 : {questName}
       </Text>
       <Pressable onPress={() => {
         setRegisteredQuest(questName);
         setQuests([
-          ...quests,
-          {
-            name: questName,
-            completed: false,
-          },
-        ]);
+  ...quests,
+  {
+    name: questName,
+    completed: false,
+    category: category,
+  },
+]);
         setQuestName('');
         }}>
          <Text style={{ color: 'white' }}>퀘스트 등록</Text>
@@ -78,7 +108,7 @@ const [quests, setQuests] = useState<Quest[]>([]);
     style={{ flexDirection: 'row', alignItems: 'center' }}
   >
     <Text style={{ color: 'white' }}>
-      {index + 1}. {quest.name}
+      {index + 1}. [{quest.category}] {quest.name}
     </Text>
 
     <Pressable
@@ -102,7 +132,18 @@ const [quests, setQuests] = useState<Quest[]>([]);
         } else {
           setExp(nextExp);
         }
-
+        if (quest.category === '근력') {
+          setStr((prevStr) => prevStr + 1);
+        }
+        if (quest.category === '유산소') {
+          setDex((prevDex) => prevDex + 1);
+        }
+        if (quest.category === '공부') {
+           setInt((prevInt) => prevInt + 1);
+        }
+        if (quest.category === '명상') {
+  setMental((prevMental) => prevMental + 1);
+}
         return nextExp;
       });
       }}
@@ -139,6 +180,18 @@ const [quests, setQuests] = useState<Quest[]>([]);
         <Text style={styles.exp}>EXP {exp} / 10</Text>
       </View>
       <Text style={styles.hp}>HP {hp} / 100</Text>
+      <Text style={{ color: '#FBBF24', fontWeight: 'bold' }}>
+        STR {str}
+  </Text>
+      <Text style={{ color: '#38BDF8', fontWeight: 'bold' }}>
+  DEX {dex}
+</Text>
+      <Text style={{ color: '#A78BFA', fontWeight: 'bold' }}>
+  INT {int}
+</Text>
+<Text style={{ color: '#34D399', fontWeight: 'bold' }}>
+  MENTAL {mental}
+</Text>
       <Text style={styles.exp}>GOLD {gold}</Text>
 
       <View style={[styles.expBar, { width: 350, alignSelf: 'center' }]}>
