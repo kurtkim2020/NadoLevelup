@@ -30,6 +30,7 @@ export default function HomeScreen() {
   const [dex, setDex] = useState(0);
   const [int, setInt] = useState(0);
   const [mental, setMental] = useState(0);
+  const [screen, setScreen] = useState<'home' | 'character'>('home');
   type Category = '근력' | '유산소' | '공부' | '명상';
 
 type Quest = {
@@ -38,7 +39,15 @@ type Quest = {
   category: Category;
 };
 
+type CompletedQuest = {
+  name: string;
+  category: Category;
+};
+
 const [quests, setQuests] = useState<Quest[]>([]);
+
+const [completedQuests, setCompletedQuests] =
+  useState<CompletedQuest[]>([]);
   
 
 // 4. 화면 구성 ============================================================
@@ -48,7 +57,37 @@ const [quests, setQuests] = useState<Quest[]>([]);
   contentContainerStyle={styles.contentContainer}
 >
       <Text style={styles.logo}>⚔️</Text>
+<View style={{
+  flexDirection: 'row',
+  justifyContent: 'center',
+  gap: 10,
+  marginBottom: 20,
+}}>
+  <Pressable
+    onPress={() => setScreen('home')}
+    style={{
+      backgroundColor: screen === 'home' ? '#16A34A' : '#374151',
+      padding: 12,
+      borderRadius: 8,
+    }}
+  >
+    <Text style={{ color: 'white' }}>홈</Text>
+  </Pressable>
 
+  <Pressable
+    onPress={() => setScreen('character')}
+    style={{
+      backgroundColor: screen === 'character' ? '#16A34A' : '#374151',
+      padding: 12,
+      borderRadius: 8,
+    }}
+  >
+    <Text style={{ color: 'white' }}>캐릭터</Text>
+  </Pressable>
+</View>
+
+{screen === 'home' && (
+  <>
       <Text style={styles.title}>나도 레벨업</Text>
       <Text style={styles.subtitle}>현실 성장 RPG</Text>
       <TextInput
@@ -114,6 +153,10 @@ const [quests, setQuests] = useState<Quest[]>([]);
     <Pressable
       onPress={() => {
         if (quest.completed) return;
+        setCompletedQuests((prev) => [
+          { name: quest.name, category: quest.category },
+          ...prev,
+        ].slice(0, 3));
 
         setQuests(
           quests.map((item, i) =>
@@ -165,6 +208,13 @@ const [quests, setQuests] = useState<Quest[]>([]);
     </Pressable>
   </View>
 ))}
+
+  </>
+)}
+
+{screen === 'character' && (
+  <>
+
       <View style={styles.character}>
         <Text style={styles.characterEmoji}>🧙‍♂️</Text>
       </View>
@@ -204,45 +254,57 @@ const [quests, setQuests] = useState<Quest[]>([]);
     캐릭터 능력치
   </Text>
 
-<View style={{
-  flexDirection: 'row',
-  marginBottom: 15,
-}}>
-  <Text style={{
-    color: '#FBBF24',
-    width: '50%',
-    textAlign: 'center',
-  }}>
-    STR {str}
-  </Text>
-
-  <Text style={{
-    color: '#38BDF8',
-    width: '50%',
-    textAlign: 'center',
-  }}>
-    DEX {dex}
-  </Text>
+<View style={{ flexDirection: 'row', marginBottom: 10 }}>
+  {[
+    { label: 'STR', name: '근력', value: str, color: '#FBBF24' },
+    { label: 'DEX', name: '민첩', value: dex, color: '#38BDF8' },
+  ].map((stat) => (
+    <View key={stat.label} style={{ width: '50%', padding: 5 }}>
+      <View style={{
+        backgroundColor: '#111827',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+      }}>
+        <Text style={{ color: stat.color, fontWeight: 'bold' }}>
+          {stat.label}
+        </Text>
+        <Text style={{ color: 'white', fontSize: 24 }}>
+          {stat.value}
+        </Text>
+        <Text style={{ color: '#9CA3AF' }}>
+          {stat.name}
+        </Text>
+      </View>
+    </View>
+  ))}
 </View>
 
-<View style={{
-  flexDirection: 'row',
-}}>
-  <Text style={{
-    color: '#A78BFA',
-    width: '50%',
-    textAlign: 'center',
-  }}>
-    INT {int}
-  </Text>
 
-  <Text style={{
-    color: '#34D399',
-    width: '50%',
-    textAlign: 'center',
-  }}>
-    MENTAL {mental}
-  </Text>
+<View style={{ flexDirection: 'row' }}>
+  {[
+    { label: 'INT', name: '지능', value: int, color: '#A78BFA' },
+    { label: 'MENTAL', name: '정신력', value: mental, color: '#34D399' },
+  ].map((stat) => (
+    <View key={stat.label} style={{ width: '50%', padding: 5 }}>
+      <View style={{
+        backgroundColor: '#111827',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+      }}>
+        <Text style={{ color: stat.color, fontWeight: 'bold' }}>
+          {stat.label}
+        </Text>
+        <Text style={{ color: 'white', fontSize: 24 }}>
+          {stat.value}
+        </Text>
+        <Text style={{ color: '#9CA3AF' }}>
+          {stat.name}
+        </Text>
+      </View>
+    </View>
+  ))}
 </View>
 <View style={{
   borderTopWidth: 1,
@@ -261,6 +323,39 @@ const [quests, setQuests] = useState<Quest[]>([]);
 </View>
 </View>
       
+      <View style={{
+  backgroundColor: '#1F2937',
+  padding: 15,
+  borderRadius: 12,
+  marginTop: 15,
+  width: 350,
+  alignSelf: 'center',
+}}>
+  <Text style={{
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 12,
+  }}>
+    최근 완료 기록
+  </Text>
+
+  {completedQuests.length === 0 ? (
+    <Text style={{ color: '#9CA3AF', textAlign: 'center' }}>
+      아직 완료한 퀘스트가 없습니다.
+    </Text>
+  ) : (
+    completedQuests.map((item, index) => (
+      <Text
+        key={index}
+        style={{ color: 'white', marginBottom: 8 }}
+      >
+        ✓ [{item.category}] {item.name}
+      </Text>
+    ))
+  )}
+</View>
 
       <View style={[styles.expBar, { width: 350, alignSelf: 'center' }]}>
         <View
@@ -287,6 +382,9 @@ const [quests, setQuests] = useState<Quest[]>([]);
        ]}
   />
       </View>
+
+  </>
+)}
 
       <View style={styles.questCard}>
         <Text style={styles.questTitle}>오늘의 퀘스트</Text>
