@@ -39,6 +39,18 @@ type Quest = {
   category: Category;
 };
 
+type ItemType = '검' | '활' | '지팡이' | '방패' | '갑옷';
+
+type Item = {
+  name: string;
+  type: ItemType;
+  rarity: string;
+  option: {
+    stat: string;
+    value: number;
+  };
+};
+
 type CompletedQuest = {
   name: string;
   category: Category;
@@ -49,6 +61,26 @@ const [quests, setQuests] = useState<Quest[]>([]);
 const [completedQuests, setCompletedQuests] =
   useState<CompletedQuest[]>([]);
   
+  const testItem: Item = {
+  name: '훈련용 목검',
+  type: '검',
+  rarity: '일반',
+  option: {
+    stat: 'STR',
+    value: 1,
+  },
+};
+
+const testBow: Item = {
+  name: '낡은 사냥활',
+  type: '활',
+  rarity: '일반',
+  option: {
+    stat: 'DEX',
+    value: 2,
+  },
+};
+
 
 // 4. 화면 구성 ============================================================
   return (
@@ -357,6 +389,26 @@ const [completedQuests, setCompletedQuests] =
   )}
 </View>
 
+<Text style={{ color: 'white', textAlign: 'center' }}>
+  테스트 아이템: {testItem.name}
+  {'\n'}
+  종류: {testItem.type}
+  {'\n'}
+  등급: {testItem.rarity}
+  {'\n'}
+  옵션: {testItem.option.stat} +{testItem.option.value}
+</Text>
+
+<Text style={{ color: 'white', textAlign: 'center', marginTop: 12 }}>
+  테스트 아이템: {testBow.name}
+  {'\n'}
+  종류: {testBow.type}
+  {'\n'}
+  등급: {testBow.rarity}
+  {'\n'}
+  옵션: {testBow.option.stat} +{testBow.option.value}
+</Text>
+
       <View style={[styles.expBar, { width: 350, alignSelf: 'center' }]}>
         <View
           style={[
@@ -385,7 +437,8 @@ const [completedQuests, setCompletedQuests] =
 
   </>
 )}
-
+{screen === 'home' && (
+  <>
       <View style={styles.questCard}>
         <Text style={styles.questTitle}>오늘의 퀘스트</Text>
             <View>  
@@ -513,6 +566,8 @@ const [completedQuests, setCompletedQuests] =
       <Text style={styles.message}>
         오늘의 나를 경험치로 바꾸자!
       </Text>
+        </>
+)}
     </ScrollView>
   );
 }
