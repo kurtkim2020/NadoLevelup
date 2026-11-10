@@ -40,13 +40,15 @@ type Quest = {
 };
 
 type ItemType = '검' | '활' | '지팡이' | '방패' | '갑옷';
+type ItemRarity = '일반' | '고급' | '희귀' | '전설' | '고유';
+type StatType = 'STR' | 'DEX' | 'INT' | 'MENTAL';
 
 type Item = {
   name: string;
   type: ItemType;
-  rarity: string;
+  rarity: ItemRarity;
   option: {
-    stat: string;
+    stat: StatType;
     value: number;
   };
 };
@@ -64,7 +66,7 @@ const [completedQuests, setCompletedQuests] =
   const testItem: Item = {
   name: '훈련용 목검',
   type: '검',
-  rarity: '일반',
+  rarity: '희귀',
   option: {
     stat: 'STR',
     value: 1,
@@ -74,13 +76,70 @@ const [completedQuests, setCompletedQuests] =
 const testBow: Item = {
   name: '낡은 사냥활',
   type: '활',
-  rarity: '일반',
+  rarity: '전설',
   option: {
     stat: 'DEX',
     value: 2,
   },
 };
 
+const createRandomOption = () => {
+  const stats: StatType[] = ['STR', 'DEX', 'INT', 'MENTAL'];
+
+  const randomIndex = Math.floor(Math.random() * stats.length);
+
+  const randomValue = Math.floor(Math.random() * 3) + 1;
+
+  return {
+    stat: stats[randomIndex],
+    value: randomValue,
+  };
+};
+
+const createRandomRarity = (): ItemRarity => {
+  const rarities: ItemRarity[] = [
+    '일반',
+    '고급',
+    '희귀',
+    '전설',
+    '고유',
+  ];
+
+  const randomIndex = Math.floor(Math.random() * rarities.length);
+
+  return rarities[randomIndex];
+};
+
+const createRandomItem = (): Item => {
+  const itemTypes: ItemType[] = [
+    '검',
+    '활',
+    '지팡이',
+    '방패',
+    '갑옷',
+  ];
+
+  const randomIndex = Math.floor(
+    Math.random() * itemTypes.length
+  );
+
+  const selectedType = itemTypes[randomIndex];
+
+  return {
+    name: `${selectedType} 아이템`,
+    type: selectedType,
+    rarity: createRandomRarity(),
+    option: createRandomOption(),
+  };
+};
+
+const [randomRarity, setRandomRarity] =
+  useState<ItemRarity | null>(null);
+
+const [randomOption, setRandomOption] =
+  useState<ReturnType<typeof createRandomOption> | null>(null);
+
+const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
 
 // 4. 화면 구성 ============================================================
   return (
@@ -408,6 +467,99 @@ const testBow: Item = {
   {'\n'}
   옵션: {testBow.option.stat} +{testBow.option.value}
 </Text>
+
+<Pressable
+  onPress={() => setRandomOption(createRandomOption())}
+  style={{
+    backgroundColor: '#2563EB',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 15,
+    alignSelf: 'center',
+  }}
+>
+  <Text style={{ color: 'white', fontWeight: 'bold' }}>
+    🎲 랜덤 옵션 생성
+  </Text>
+</Pressable>
+
+{randomOption && (
+  <Text
+    style={{
+      color: '#FBBF24',
+      textAlign: 'center',
+      marginTop: 10,
+    }}
+  >
+    생성된 옵션: {randomOption.stat} +{randomOption.value}
+  </Text>
+)}
+
+<Pressable
+  onPress={() => setRandomRarity(createRandomRarity())}
+  style={{
+    backgroundColor: '#7C3AED',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 12,
+    alignSelf: 'center',
+  }}
+>
+  <Text style={{ color: 'white', fontWeight: 'bold' }}>
+    🎲 랜덤 등급 생성
+  </Text>
+</Pressable>
+
+{randomRarity && (
+  <Text
+    style={{
+      color: '#FBBF24',
+      textAlign: 'center',
+      marginTop: 10,
+    }}
+  >
+    생성된 등급: {randomRarity}
+  </Text>
+)}
+
+<Pressable
+  onPress={() => setGeneratedItem(createRandomItem())}
+  style={{
+    backgroundColor: '#16A34A',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 20,
+    alignSelf: 'center',
+  }}
+>
+  <Text style={{ color: 'white', fontWeight: 'bold' }}>
+    🎁 랜덤 아이템 생성
+  </Text>
+</Pressable>
+
+{generatedItem && (
+  <View style={{
+    alignItems: 'center',
+    marginTop: 15,
+    gap: 5,
+  }}>
+    <Text style={{ color: 'white', fontWeight: 'bold' }}>
+      획득 아이템: {generatedItem.name}
+    </Text>
+
+    <Text style={{ color: 'white' }}>
+      종류: {generatedItem.type}
+    </Text>
+
+    <Text style={{ color: '#FBBF24' }}>
+      등급: {generatedItem.rarity}
+    </Text>
+
+    <Text style={{ color: '#38BDF8' }}>
+      옵션: {generatedItem.option.stat} +{generatedItem.option.value}
+    </Text>
+  </View>
+)}
 
       <View style={[styles.expBar, { width: 350, alignSelf: 'center' }]}>
         <View
