@@ -141,6 +141,51 @@ const [randomOption, setRandomOption] =
 
 const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
 
+const [inventory, setInventory] = useState<Item[]>([]);
+
+const [rewardMessage, setRewardMessage] = useState('');
+
+const createQuestReward = (): Item => {
+  const types: ItemType[] = ['검', '활', '지팡이', '방패', '갑옷'];
+
+  const randomType =
+    types[Math.floor(Math.random() * types.length)];
+
+  return {
+    name: `보상 ${randomType}`,
+    type: randomType,
+    rarity: createRandomRarity(),
+    option: createRandomOption(),
+  };
+};
+
+const [equippedItem, setEquippedItem] = useState<Item | null>(null);
+
+const getEquipmentBonus = (stat: string): number => {
+  if (equippedItem?.option.stat === stat) {
+    return equippedItem.option.value;
+  }
+
+  return 0;
+};
+
+const getRarityColor = (rarity: ItemRarity): string => {
+  switch (rarity) {
+    case '일반':
+      return '#9CA3AF';
+    case '고급':
+      return '#22C55E';
+    case '희귀':
+      return '#3B82F6';
+    case '전설':
+      return '#F59E0B';
+    case '고유':
+      return '#A855F7';
+    default:
+      return '#FFFFFF';
+  }
+};
+
 // 4. 화면 구성 ============================================================
   return (
     <ScrollView
@@ -244,6 +289,13 @@ const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
     <Pressable
       onPress={() => {
         if (quest.completed) return;
+        const rewardItem = createQuestReward();
+        setRewardMessage(`🎁 ${rewardItem.name} 획득!`);
+
+setInventory((prevInventory) => [
+  ...prevInventory,
+  rewardItem,
+]);
         setCompletedQuests((prev) => [
           { name: quest.name, category: quest.category },
           ...prev,
@@ -300,6 +352,19 @@ const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
   </View>
 ))}
 
+{rewardMessage !== '' && (
+  <Text
+    style={{
+      color: '#FBBF24',
+      textAlign: 'center',
+      marginTop: 10,
+      fontWeight: 'bold',
+    }}
+  >
+    {rewardMessage}
+  </Text>
+)}
+
   </>
 )}
 
@@ -347,8 +412,8 @@ const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
 
 <View style={{ flexDirection: 'row', marginBottom: 10 }}>
   {[
-    { label: 'STR', name: '근력', value: str, color: '#FBBF24' },
-    { label: 'DEX', name: '민첩', value: dex, color: '#38BDF8' },
+    { label: 'STR', name: '근력', value: str + getEquipmentBonus('STR'), color: '#FBBF24' },
+{ label: 'DEX', name: '민첩', value: dex + getEquipmentBonus('DEX'), color: '#38BDF8' },
   ].map((stat) => (
     <View key={stat.label} style={{ width: '50%', padding: 5 }}>
       <View style={{
@@ -360,9 +425,17 @@ const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
         <Text style={{ color: stat.color, fontWeight: 'bold' }}>
           {stat.label}
         </Text>
-        <Text style={{ color: 'white', fontSize: 24 }}>
-          {stat.value}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+  <Text style={{ color: 'white', fontSize: 24 }}>
+    {stat.value}
+  </Text>
+
+  {getEquipmentBonus(stat.label) > 0 && (
+    <Text style={{ color: '#22C55E', fontSize: 14 }}>
+      (+{getEquipmentBonus(stat.label)})
+    </Text>
+  )}
+</View>
         <Text style={{ color: '#9CA3AF' }}>
           {stat.name}
         </Text>
@@ -374,8 +447,8 @@ const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
 
 <View style={{ flexDirection: 'row' }}>
   {[
-    { label: 'INT', name: '지능', value: int, color: '#A78BFA' },
-    { label: 'MENTAL', name: '정신력', value: mental, color: '#34D399' },
+    { label: 'INT', name: '지능', value: int + getEquipmentBonus('INT'), color: '#A78BFA' },
+    { label: 'MENTAL', name: '정신력', value: mental + getEquipmentBonus('MENTAL'), color: '#34D399' },
   ].map((stat) => (
     <View key={stat.label} style={{ width: '50%', padding: 5 }}>
       <View style={{
@@ -387,9 +460,17 @@ const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
         <Text style={{ color: stat.color, fontWeight: 'bold' }}>
           {stat.label}
         </Text>
-        <Text style={{ color: 'white', fontSize: 24 }}>
-          {stat.value}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+  <Text style={{ color: 'white', fontSize: 24 }}>
+    {stat.value}
+  </Text>
+
+  {getEquipmentBonus(stat.label) > 0 && (
+    <Text style={{ color: '#22C55E', fontSize: 14 }}>
+      (+{getEquipmentBonus(stat.label)})
+    </Text>
+  )}
+</View>
         <Text style={{ color: '#9CA3AF' }}>
           {stat.name}
         </Text>
@@ -445,6 +526,124 @@ const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
         ✓ [{item.category}] {item.name}
       </Text>
     ))
+  )}
+</View>
+
+<View style={{
+  backgroundColor: '#1F2937',
+  padding: 15,
+  borderRadius: 12,
+  marginTop: 15,
+  width: 350,
+  alignSelf: 'center',
+}}>
+  <Text style={{
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 12,
+  }}>
+    🎒 인벤토리 ({inventory.length}개)
+  </Text>
+
+<View style={{
+  backgroundColor: '#111827',
+  padding: 12,
+  borderRadius: 8,
+  marginBottom: 15,
+  borderWidth: 1,
+  borderColor: '#4B5563',
+}}>
+  <Text style={{
+    color: '#FBBF24',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  }}>
+    ⚔️ 현재 장착 장비
+  </Text>
+
+  <Text style={{
+    color: 'white',
+    textAlign: 'center',
+    marginTop: 5,
+  }}>
+    {equippedItem
+      ? `${equippedItem.name} (${equippedItem.option.stat} +${equippedItem.option.value})`
+      : '장착한 아이템이 없습니다.'}
+  </Text>
+
+  {equippedItem && (
+  <Text
+    style={{
+      color: '#22C55E',
+      textAlign: 'center',
+      marginTop: 5,
+      fontWeight: 'bold',
+    }}
+  >
+    적용 중: {equippedItem.option.stat}
+    {' +'}
+    {equippedItem.option.value}
+  </Text>
+)}
+
+</View>
+
+  {inventory.length === 0 ? (
+    <Text style={{ color: '#9CA3AF', textAlign: 'center' }}>
+      보유한 아이템이 없습니다.
+    </Text>
+  ) : (
+    inventory.map((item, index) => (
+  <View
+    key={index}
+    style={{
+      borderWidth: 2,
+      borderColor: getRarityColor(item.rarity),
+      backgroundColor: '#111827',
+      borderRadius: 10,
+      padding: 12,
+      marginBottom: 10,
+    }}
+  >
+    <Text
+      style={{
+        color: getRarityColor(item.rarity),
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+      }}
+    >
+      [{item.rarity}] {item.name}
+    </Text>
+
+    <Text style={{ color: 'white' }}>
+      종류: {item.type}
+    </Text>
+
+    <Text style={{ color: '#9CA3AF' }}>
+      옵션: {item.option.stat} +{item.option.value}
+    </Text>
+
+<Pressable
+  onPress={() => setEquippedItem(item)}
+  style={{
+    backgroundColor:
+      equippedItem === item ? '#16A34A' : '#374151',
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 10,
+    alignItems: 'center',
+  }}
+>
+  <Text style={{ color: 'white', fontWeight: 'bold' }}>
+    {equippedItem === item ? '✓ 장착 중' : '장착하기'}
+  </Text>
+</Pressable>
+
+  </View>
+))
   )}
 </View>
 
@@ -558,6 +757,27 @@ const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
     <Text style={{ color: '#38BDF8' }}>
       옵션: {generatedItem.option.stat} +{generatedItem.option.value}
     </Text>
+
+<Pressable
+  onPress={() => {
+    if (!generatedItem) return;
+    
+    setInventory((prev) => [...prev, generatedItem]);
+    setGeneratedItem(null);
+  }}
+  style={{
+    backgroundColor: '#16A34A',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 10,
+    alignSelf: 'center',
+  }}
+>
+  <Text style={{ color: 'white', fontWeight: 'bold' }}>
+    🎒 인벤토리에 보관
+  </Text>
+</Pressable>
+
   </View>
 )}
 
