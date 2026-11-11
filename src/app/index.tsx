@@ -143,6 +143,33 @@ const [generatedItem, setGeneratedItem] = useState<Item | null>(null);
 
 const [inventory, setInventory] = useState<Item[]>([]);
 
+const [playerHp, setPlayerHp] = useState(100);
+const [monsterHp, setMonsterHp] = useState(50);
+
+const attackMonster = () => {
+  if (monsterHp <= 0 || playerHp <= 0) return;
+
+  const damage = 10;
+  const counterDamage = 5;
+
+  const remainingMonsterHp = Math.max(0, monsterHp - damage);
+
+  // 1. 플레이어 공격
+  setMonsterHp(remainingMonsterHp);
+
+  // 2. 몬스터가 살아 있다면 반격
+  if (remainingMonsterHp > 0) {
+    setPlayerHp((prevHp) =>
+      Math.max(0, prevHp - counterDamage)
+    );
+  }
+};
+
+const restartBattle = () => {
+  setPlayerHp(100);
+  setMonsterHp(50);
+};
+
 const [rewardMessage, setRewardMessage] = useState('');
 
 const createQuestReward = (): Item => {
@@ -364,6 +391,109 @@ setInventory((prevInventory) => [
     {rewardMessage}
   </Text>
 )}
+
+<View
+  style={{
+    backgroundColor: '#1F2937',
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 20,
+  }}
+>
+  <Text
+    style={{
+      color: 'white',
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginBottom: 15,
+    }}
+  >
+    ⚔️ 전투 테스트
+  </Text>
+
+  <Text style={{ color: '#22C55E', fontSize: 18 }}>
+    🧑 플레이어 HP: {playerHp} / 100
+  </Text>
+
+  <Text
+    style={{
+      color: '#EF4444',
+      fontSize: 18,
+      marginTop: 10,
+    }}
+  >
+    👾 몬스터 HP: {monsterHp} / 50
+  </Text>
+
+<Pressable
+  onPress={attackMonster}
+  disabled={monsterHp === 0 || playerHp === 0}
+  style={{
+    backgroundColor:
+  monsterHp === 0 || playerHp === 0
+    ? '#4B5563'
+    : '#DC2626',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 15,
+    alignItems: 'center',
+  }}
+>
+  <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>
+    ⚔️ 공격하기
+  </Text>
+</Pressable>
+
+{monsterHp === 0 && (
+  <Text
+    style={{
+      color: '#FBBF24',
+      fontSize: 22,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginTop: 15,
+    }}
+  >
+    🏆 전투 승리!
+  </Text>
+)}
+
+{playerHp === 0 && (
+  <Text
+    style={{
+      color: '#EF4444',
+      fontSize: 22,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginTop: 15,
+    }}
+  >
+    💀 전투 패배!
+  </Text>
+)}
+
+<Pressable
+  onPress={restartBattle}
+  style={{
+    backgroundColor: '#2563EB',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 15,
+    alignItems: 'center',
+  }}
+>
+  <Text
+    style={{
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 16,
+    }}
+  >
+    🔄 전투 재시작
+  </Text>
+</Pressable>
+
+</View>
 
   </>
 )}
