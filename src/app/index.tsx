@@ -145,16 +145,61 @@ const [inventory, setInventory] = useState<Item[]>([]);
 
 const [playerHp, setPlayerHp] = useState(100);
 const [monsterHp, setMonsterHp] = useState(50);
+const [position, setPosition] = useState(1);
 
 const attackMonster = () => {
   if (monsterHp <= 0 || playerHp <= 0) return;
+
+  // 1열에서만 근접 공격 가능
+  if (position !== 1) return;
 
   const damage = 10;
   const counterDamage = 5;
 
   const remainingMonsterHp = Math.max(0, monsterHp - damage);
 
-  // 1. 플레이어 공격
+  setMonsterHp(remainingMonsterHp);
+
+  if (remainingMonsterHp > 0) {
+    setPlayerHp((prevHp) =>
+      Math.max(0, prevHp - counterDamage)
+    );
+  }
+};
+
+const retreatAttack = () => {
+  if (monsterHp <= 0 || playerHp <= 0) return;
+  if (position !== 1) return;
+
+  const damage = 7;
+  const counterDamage = 5;
+
+  const remainingMonsterHp = Math.max(0, monsterHp - damage);
+
+  // 1. 몬스터 공격
+  setMonsterHp(remainingMonsterHp);
+
+  // 2. 플레이어를 2열로 이동
+  setPosition(2);
+
+  // 3. 몬스터가 살아 있다면 반격
+  if (remainingMonsterHp > 0) {
+    setPlayerHp((prevHp) =>
+      Math.max(0, prevHp - counterDamage)
+    );
+  }
+};
+
+const rangedAttack = () => {
+  if (monsterHp <= 0 || playerHp <= 0) return;
+  if (position !== 2) return;
+
+  const damage = 8;
+  const counterDamage = 5;
+
+  const remainingMonsterHp = Math.max(0, monsterHp - damage);
+
+  // 1. 몬스터 원거리 공격
   setMonsterHp(remainingMonsterHp);
 
   // 2. 몬스터가 살아 있다면 반격
@@ -168,6 +213,7 @@ const attackMonster = () => {
 const restartBattle = () => {
   setPlayerHp(100);
   setMonsterHp(50);
+  setPosition(1);
 };
 
 const [rewardMessage, setRewardMessage] = useState('');
@@ -425,22 +471,161 @@ setInventory((prevInventory) => [
     👾 몬스터 HP: {monsterHp} / 50
   </Text>
 
+<View
+  style={{
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 20,
+  }}
+>
+  {[1, 2, 3].map((slot) => (
+    <View
+      key={slot}
+      style={{
+        flex: 1,
+        backgroundColor: '#111827',
+        borderWidth: 2,
+        borderColor:
+          slot === position ? '#FBBF24' : '#4B5563',
+        borderRadius: 8,
+        padding: 12,
+        alignItems: 'center',
+      }}
+    >
+      <Text style={{
+        color: 'white',
+        fontWeight: 'bold',
+      }}>
+        {slot}열
+      </Text>
+
+      <Text style={{
+        fontSize: 32,
+        marginVertical: 10,
+        color: 'white',
+      }}>
+        {slot === position ? '🧑' : '＋'}
+      </Text>
+
+      <Text style={{ color: '#9CA3AF' }}>
+        {slot === 1
+          ? '근접'
+          : slot === 2
+          ? '지원'
+          : '후방'}
+      </Text>
+    </View>
+  ))}
+</View>
+
+<View style={{
+  flexDirection: 'row',
+  gap: 8,
+  marginTop: 10,
+}}>
+  {[1, 2, 3].map((slot) => (
+    <Pressable
+      key={slot}
+      onPress={() => setPosition(slot)}
+      style={{
+        flex: 1,
+        backgroundColor: '#2563EB',
+        padding: 10,
+        borderRadius: 8,
+        alignItems: 'center',
+      }}
+    >
+      <Text style={{ color: 'white' }}>
+        {slot}열 이동
+      </Text>
+    </Pressable>
+  ))}
+</View>
+
 <Pressable
   onPress={attackMonster}
-  disabled={monsterHp === 0 || playerHp === 0}
+  disabled={
+    monsterHp === 0 ||
+    playerHp === 0 ||
+    position !== 1
+  }
   style={{
     backgroundColor:
-  monsterHp === 0 || playerHp === 0
-    ? '#4B5563'
-    : '#DC2626',
+      monsterHp === 0 ||
+      playerHp === 0 ||
+      position !== 1
+        ? '#4B5563'
+        : '#DC2626',
     padding: 12,
     borderRadius: 8,
     marginTop: 15,
     alignItems: 'center',
   }}
 >
-  <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>
-    ⚔️ 공격하기
+  <Text style={{
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  }}>
+    ⚔️ 근접 공격 (1열)
+  </Text>
+</Pressable>
+
+<Pressable
+  onPress={retreatAttack}
+  disabled={
+    monsterHp === 0 ||
+    playerHp === 0 ||
+    position !== 1
+  }
+  style={{
+    backgroundColor:
+      monsterHp === 0 ||
+      playerHp === 0 ||
+      position !== 1
+        ? '#4B5563'
+        : '#7C3AED',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 10,
+    alignItems: 'center',
+  }}
+>
+  <Text style={{
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  }}>
+    ⚔️ 후퇴 공격 (1열 → 2열)
+  </Text>
+</Pressable>
+
+<Pressable
+  onPress={rangedAttack}
+  disabled={
+    monsterHp === 0 ||
+    playerHp === 0 ||
+    position !== 2
+  }
+  style={{
+    backgroundColor:
+      monsterHp === 0 ||
+      playerHp === 0 ||
+      position !== 2
+        ? '#4B5563'
+        : '#059669',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 10,
+    alignItems: 'center',
+  }}
+>
+  <Text style={{
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  }}>
+    🏹 원거리 공격 (2열)
   </Text>
 </Pressable>
 
